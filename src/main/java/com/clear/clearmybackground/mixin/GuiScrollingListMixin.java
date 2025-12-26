@@ -59,8 +59,21 @@ public abstract class GuiScrollingListMixin {
                     ordinal = 0
             )
     )
-    private void cancelDraw(@Nonnull Tessellator instance) {
+    private void redirectDraw(@Nonnull Tessellator instance) {
         instance.getBuffer().finishDrawing();
+        GlStateManager.enableBlend();
+        ClientHelper.renderListBackground(this.client, this.left, this.top, this.right, this.bottom, this.scrollDistance);
+    }
+
+    @Redirect(
+            method = "drawScreen(IIF)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraftforge/fml/client/GuiScrollingList;drawGradientRect(IIIIII)V",
+                    ordinal = 0
+            )
+    )
+    private void redirectWorldDraw(GuiScrollingList instance, int left, int top, int right, int bottom, int color1, int color2) {
         GlStateManager.enableBlend();
         ClientHelper.renderListBackground(this.client, this.left, this.top, this.right, this.bottom, this.scrollDistance);
     }

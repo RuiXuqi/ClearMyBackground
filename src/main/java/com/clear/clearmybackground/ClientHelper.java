@@ -34,7 +34,7 @@ public class ClientHelper {
     /**
      * The {@link GuiMainMenu} instance used for panorama rendering.
      */
-    public static GuiMainMenu MENU_INSTANCE = null;
+    public static @Nonnull GuiMainMenu MENU_INSTANCE = new GuiMainMenu();
 
     private static final ResourceLocation MENU_BACKGROUND = new ResourceLocation(Tags.MOD_ID, "textures/gui/menu_background.png");
     private static final ResourceLocation MENU_LIST_BACKGROUND = new ResourceLocation(Tags.MOD_ID, "textures/gui/menu_list_background.png");

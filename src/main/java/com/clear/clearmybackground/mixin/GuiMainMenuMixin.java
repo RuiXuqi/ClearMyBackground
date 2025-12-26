@@ -17,14 +17,7 @@ public class GuiMainMenuMixin implements IGuiMainMenuMixin {
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        if (ClientHelper.MENU_INSTANCE != null) {
-            this.panoramaTimer = ((GuiMainMenuAccessor) ClientHelper.MENU_INSTANCE).getPanoramaTimer();
-        }
-        ClientHelper.MENU_INSTANCE = (GuiMainMenu) (Object) this;
-    }
-
-    @Inject(method = "onGuiClosed", at = @At("TAIL"))
-    private void onClose(CallbackInfo ci) {
+        this.panoramaTimer = ((GuiMainMenuAccessor) ClientHelper.MENU_INSTANCE).getPanoramaTimer();
         ClientHelper.MENU_INSTANCE = (GuiMainMenu) (Object) this;
     }
 
