@@ -49,22 +49,22 @@ public class ClientHelper {
         if (mc.world == null) {
             renderPanorama(mc);
         }
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         renderMenuBackground(mc, width, height);
     }
 
     private static void renderMenuBackground(@Nonnull Minecraft mc, int width, int height) {
+        boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
         mc.getTextureManager().bindTexture(mc.world == null ? MENU_BACKGROUND : INWORLD_MENU_BACKGROUND);
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, 32, 32);
+
+        if (blend) GlStateManager.enableBlend();
+        else GlStateManager.disableBlend();
     }
 
-    private static void renderPanorama(@Nonnull Minecraft mc) {
-        if (MENU_INSTANCE == null) {
-            return;
-        }
-
+    public static void renderPanorama(@Nonnull Minecraft mc) {
         final GuiMainMenu menu = MENU_INSTANCE;
 
         int oldWidth = menu.width;
@@ -72,25 +72,46 @@ public class ClientHelper {
         final ScaledResolution sr = new ScaledResolution(mc);
         menu.setWorldAndResolution(mc, sr.getScaledWidth(), sr.getScaledHeight());
 
+        boolean alpha = GL11.glIsEnabled(GL11.GL_ALPHA_TEST);
+        boolean depth = GL11.glIsEnabled(GL11.GL_DEPTH_TEST);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableDepth();
+
         ((IGuiMainMenuMixin) menu).clearMyBackground$tickPanoramaTimer(mc.getTickLength());
-        ((GuiMainMenuAccessor)menu).invokeRenderSkybox(0, 0, mc.getTickLength());
+        ((GuiMainMenuAccessor) menu).invokeRenderSkybox(0, 0, mc.getTickLength());
+
+        if (alpha) GlStateManager.enableAlpha();
+        else GlStateManager.disableAlpha();
+        if (depth) GlStateManager.enableDepth();
+        else GlStateManager.disableDepth();
 
         menu.width = oldWidth;
         menu.height = oldHeight;
-
-        // 6. 遮罩
-        //((GuiAccessor) menu).invokeDrawGradientRect(0, 0, this.width, this.height, 0x40000000, 0x40000000);
     }
 
     public static void renderListSeparators(@Nonnull Minecraft mc, int left, int top, int right, int bottom) {
+        boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
         mc.getTextureManager().bindTexture(mc.world == null ? HEADER_SEPARATOR : INWORLD_HEADER_SEPARATOR);
         Gui.drawModalRectWithCustomSizedTexture(left, top - 2, 0.0F, 0.0F, right - left, 2, 32, 2);
         mc.getTextureManager().bindTexture(mc.world == null ? FOOTER_SEPARATOR : INWORLD_FOOTER_SEPARATOR);
         Gui.drawModalRectWithCustomSizedTexture(left, bottom, 0.0F, 0.0F, right - left, 2, 32, 2);
+
+        if (blend) GlStateManager.enableBlend();
+        else GlStateManager.disableBlend();
     }
 
     public static void renderListBackground(@Nonnull Minecraft mc, int left, int top, int right, int bottom, float amountScrolled) {
+        boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
         mc.getTextureManager().bindTexture(mc.world == null ? MENU_LIST_BACKGROUND : INWORLD_MENU_LIST_BACKGROUND);
         Gui.drawModalRectWithCustomSizedTexture(left, top, right, bottom + amountScrolled, right - left, bottom - top, 32, 32);
+
+        if (blend) GlStateManager.enableBlend();
+        else GlStateManager.disableBlend();
     }
 }

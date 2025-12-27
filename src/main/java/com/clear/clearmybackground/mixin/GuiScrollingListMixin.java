@@ -2,7 +2,7 @@ package com.clear.clearmybackground.mixin;
 
 import com.clear.clearmybackground.ClientHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
@@ -60,8 +60,9 @@ public abstract class GuiScrollingListMixin {
             )
     )
     private void redirectDraw(@Nonnull Tessellator instance) {
-        instance.getBuffer().finishDrawing();
-        GlStateManager.enableBlend();
+        BufferBuilder origBuffer = instance.getBuffer();
+        origBuffer.finishDrawing();
+        origBuffer.reset();
         ClientHelper.renderListBackground(this.client, this.left, this.top, this.right, this.bottom, this.scrollDistance);
     }
 
@@ -74,7 +75,6 @@ public abstract class GuiScrollingListMixin {
             )
     )
     private void redirectWorldDraw(GuiScrollingList instance, int left, int top, int right, int bottom, int color1, int color2) {
-        GlStateManager.enableBlend();
         ClientHelper.renderListBackground(this.client, this.left, this.top, this.right, this.bottom, this.scrollDistance);
     }
 }

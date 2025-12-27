@@ -3,6 +3,7 @@ package com.clear.clearmybackground.mixin;
 import com.clear.clearmybackground.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
@@ -59,7 +60,9 @@ public class GuiSlotMixin {
             )
     )
     private void cancelTopShadowDrawing(@Nonnull Tessellator instance) {
-        instance.getBuffer().finishDrawing();
+        BufferBuilder origBuffer = instance.getBuffer();
+        origBuffer.finishDrawing();
+        origBuffer.reset();
     }
 
     @Redirect(
@@ -71,7 +74,18 @@ public class GuiSlotMixin {
             )
     )
     private void cancelBottomShadowDrawing(@Nonnull Tessellator instance) {
-        instance.getBuffer().finishDrawing();
+        BufferBuilder origBuffer = instance.getBuffer();
+        origBuffer.finishDrawing();
+        origBuffer.reset();
+    }
+
+    @Inject(
+            method = "overlayBackground",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void cancelOverlayDirtDrawing(int startY, int endY, int startAlpha, int endAlpha, @Nonnull CallbackInfo ci) {
+        ci.cancel();
     }
 
     @Inject(
@@ -81,19 +95,8 @@ public class GuiSlotMixin {
             remap = false // This method is created by forge
     )
     private void modifyBackground(@Nonnull CallbackInfo ci) {
-        GlStateManager.enableBlend();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         ClientHelper.renderListBackground(this.mc, this.left, this.top, this.right, this.bottom, this.amountScrolled);
-        ci.cancel();
-    }
-
-    @Inject(
-            method = "overlayBackground",
-            at = @At("HEAD"),
-            cancellable = true,
-            remap = false // This method is created by forge
-    )
-    private void modifyOverlay(int startY, int endY, int startAlpha, int endAlpha, @Nonnull CallbackInfo ci) {
         ci.cancel();
     }
 
