@@ -1,6 +1,6 @@
 package com.clear.clearmybackground;
 
-import com.clear.clearmybackground.mixin.GuiMainMenuAccessor;
+import com.clear.clearmybackground.mixin.early.GuiMainMenuAccessor;
 import com.clear.clearmybackground.mixininterface.IGuiMainMenuMixin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

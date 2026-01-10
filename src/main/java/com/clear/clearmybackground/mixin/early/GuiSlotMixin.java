@@ -1,4 +1,4 @@
-package com.clear.clearmybackground.mixin;
+package com.clear.clearmybackground.mixin.early;
 
 import com.clear.clearmybackground.ClientHelper;
 import net.minecraft.client.Minecraft;
@@ -105,7 +105,7 @@ public class GuiSlotMixin {
         ClientHelper.scissor(this.left, this.top, this.right - this.left, this.bottom - this.top);
     }
 
-    @Inject(method = "drawSelectionBox", at = @At("TAIL"))
+    @Inject(method = "drawSelectionBox", at = @At("RETURN"))
     private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci){
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }

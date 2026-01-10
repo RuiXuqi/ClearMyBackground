@@ -1,4 +1,4 @@
-package com.clear.clearmybackground.mixin;
+package com.clear.clearmybackground.mixin.early;
 
 import net.minecraft.client.gui.GuiMainMenu;
 import org.spongepowered.asm.mixin.Mixin;

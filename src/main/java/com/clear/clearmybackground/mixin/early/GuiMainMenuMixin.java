@@ -1,4 +1,4 @@
-package com.clear.clearmybackground.mixin;
+package com.clear.clearmybackground.mixin.early;
 
 import com.clear.clearmybackground.ClientHelper;
 import com.clear.clearmybackground.mixininterface.IGuiMainMenuMixin;
@@ -15,7 +15,7 @@ public class GuiMainMenuMixin implements IGuiMainMenuMixin {
     @Shadow
     private float panoramaTimer;
 
-    @Inject(method = "initGui", at = @At("TAIL"))
+    @Inject(method = "initGui", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
         this.panoramaTimer = ((GuiMainMenuAccessor) ClientHelper.MENU_INSTANCE).getPanoramaTimer();
         ClientHelper.MENU_INSTANCE = (GuiMainMenu) (Object) this;

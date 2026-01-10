@@ -57,4 +57,7 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+    //runtimeOnly 'curse.maven:konkrete-410295:4514895'
+    //implementation rfg.deobf('curse.maven:fancymenu-367706:4655936')
+    implementation rfg.deobf('curse.maven:controlling-250398:5408385')
 }

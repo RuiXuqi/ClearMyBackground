@@ -1,5 +1,5 @@
 {
-  "package": "com.clear.clearmybackground.mixin",
+  "package": "com.clear.clearmybackground.mixin.early",
   "required": true,
   "refmap": "mixins.clearmybackground.refmap.json",
   "target": "@env(DEFAULT)",
@@ -8,6 +8,7 @@
   "mixins": [],
   "server": [],
   "client": [
+    "GuiClickableScrolledSelectionListProxyMixin",
     "GuiMainMenuAccessor",
     "GuiMainMenuMixin",
     "GuiScreenMixin",

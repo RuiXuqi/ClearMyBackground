@@ -1,4 +1,4 @@
-package com.clear.clearmybackground;
+package com.clear.clearmybackground.mixin;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import zone.rong.mixinbooter.IEarlyMixinLoader;
@@ -8,9 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name(Tags.MOD_NAME)
 @IFMLLoadingPlugin.MCVersion("1.12.2")
-public class LoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
+public class EarlyMixin implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Nullable
     @Override
     public String[] getASMTransformerClass() {

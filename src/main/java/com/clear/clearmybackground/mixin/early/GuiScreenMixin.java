@@ -1,4 +1,4 @@
-package com.clear.clearmybackground.mixin;
+package com.clear.clearmybackground.mixin.early;
 
 import com.clear.clearmybackground.ClearMyBackground;
 import com.clear.clearmybackground.ClientHelper;
