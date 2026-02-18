@@ -10,10 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(GuiMainMenu.class)
 public class GuiMainMenuMixin implements IGuiMainMenuMixin {
     @Shadow
-    private float panoramaTimer;
+    private int panoramaTimer;
 
     @Inject(method = "initGui", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
@@ -23,7 +24,7 @@ public class GuiMainMenuMixin implements IGuiMainMenuMixin {
 
     @Unique
     @Override
-    public void clearMyBackground$tickPanoramaTimer(float partialTicks) {
-        this.panoramaTimer += partialTicks;
+    public void clearMyBackground$tickPanoramaTimer() {
+        ++this.panoramaTimer;
     }
 }

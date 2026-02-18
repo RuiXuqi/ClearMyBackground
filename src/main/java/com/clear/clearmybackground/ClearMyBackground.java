@@ -1,25 +1,26 @@
 package com.clear.clearmybackground;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(
-        modid = Tags.MOD_ID,
-        name = Tags.MOD_NAME,
+        modid = ClearMyBackground.MOD_ID,
+        name = ClearMyBackground.MOD_NAME,
         version = Tags.VERSION,
-        clientSideOnly = true,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:mixinbooter@[8.0,)"
+        dependencies = "required-after:unimixins",
+        customProperties = {
+                @Mod.CustomProperty(k = "license", v = "MIT"),
+                @Mod.CustomProperty(k = "issueTrackerUrl", v = "https://github.com/RuiXuqi/ClearMyBackground/issues"),
+                @Mod.CustomProperty(k = "iconItem", v = "minecraft:dirt")
+        }
 )
 public class ClearMyBackground {
     public static final Logger LOGGER = LogManager.getLogger();
-    public static boolean FluxLoadingLoaded = false;
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        FluxLoadingLoaded = Loader.isModLoaded("fluxloading");
-    }
+    public static final String MOD_ID = "clearmybackground";
+    public static final String MOD_NAME = "Clear My Background";
 }

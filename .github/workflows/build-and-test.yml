@@ -1,0 +1,10 @@
+
+name: Build and test
+
+on:
+  [ workflow_dispatch, push, pull_request ]
+
+jobs:
+  build-and-test:
+    uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/build-and-test.yml@master
+    secrets: inherit

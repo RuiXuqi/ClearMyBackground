@@ -3,8 +3,6 @@ package com.clear.clearmybackground.mixin.early;
 import com.clear.clearmybackground.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -17,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(GuiSlot.class)
 public class GuiSlotMixin {
     @Shadow
@@ -33,21 +32,22 @@ public class GuiSlotMixin {
 
     @Shadow
     @Final
-    protected Minecraft mc;
+    private Minecraft mc;
 
     @Shadow
-    protected float amountScrolled;
+    private float amountScrolled;
 
     @Inject(
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/GlStateManager;disableTexture2D()V",
-                    ordinal = 0
-            )
+                    target = "Lorg/lwjgl/opengl/GL11;glDisable(I)V",
+                    ordinal = 4
+            ),
+            remap = false
     )
     private void drawFooterAndHeader(int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         ClientHelper.renderListSeparators(this.mc, this.left, this.top, this.right, this.bottom);
     }
 
@@ -55,28 +55,30 @@ public class GuiSlotMixin {
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/Tessellator;draw()V",
+                    target = "Lnet/minecraft/client/renderer/Tessellator;draw()I",
                     ordinal = 0
             )
     )
-    private void cancelTopShadowDrawing(@Nonnull Tessellator instance) {
-        BufferBuilder origBuffer = instance.getBuffer();
-        origBuffer.finishDrawing();
-        origBuffer.reset();
+    private int cancelTopShadowDrawing(@Nonnull Tessellator instance) {
+        TessellatorAccessor accessor = (TessellatorAccessor) instance;
+        accessor.setIsDrawing(false);
+        accessor.invokeReset();
+        return 0;
     }
 
     @Redirect(
             method = "drawScreen",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/Tessellator;draw()V",
+                    target = "Lnet/minecraft/client/renderer/Tessellator;draw()I",
                     ordinal = 1
             )
     )
-    private void cancelBottomShadowDrawing(@Nonnull Tessellator instance) {
-        BufferBuilder origBuffer = instance.getBuffer();
-        origBuffer.finishDrawing();
-        origBuffer.reset();
+    private int cancelBottomShadowDrawing(@Nonnull Tessellator instance) {
+        TessellatorAccessor accessor = (TessellatorAccessor) instance;
+        accessor.setIsDrawing(false);
+        accessor.invokeReset();
+        return 0;
     }
 
     @Inject(
@@ -95,18 +97,18 @@ public class GuiSlotMixin {
             remap = false // This method is created by forge
     )
     private void modifyBackground(@Nonnull CallbackInfo ci) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         ClientHelper.renderListBackground(this.mc, this.left, this.top, this.right, this.bottom, this.amountScrolled);
         ci.cancel();
     }
 
     @Inject(method = "drawSelectionBox", at = @At("HEAD"))
-    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci){
+    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci){
         ClientHelper.scissor(this.left, this.top, this.right - this.left, this.bottom - this.top);
     }
 
     @Inject(method = "drawSelectionBox", at = @At("RETURN"))
-    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci){
+    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci){
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 }
