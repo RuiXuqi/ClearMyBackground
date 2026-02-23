@@ -12,6 +12,6 @@ public class GuiWorldSelectionMixin {
     @Inject(method = "drawScreen", at = @At("HEAD"))
     private void drawBG(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         GuiWorldSelection self = (GuiWorldSelection) (Object) this;
-        ClientHelper.renderWorldBackground(self.mc, self.width, self.height);
+        ClientHelper.renderWorldBackground(self, self.mc, self.width, self.height);
     }
 }

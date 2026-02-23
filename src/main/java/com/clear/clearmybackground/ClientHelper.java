@@ -3,14 +3,14 @@ package com.clear.clearmybackground;
 import com.clear.clearmybackground.mixin.early.GuiMainMenuAccessor;
 import com.clear.clearmybackground.mixininterface.IGuiMainMenuMixin;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.GuiNotification;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClientHelper {
 
@@ -45,11 +45,13 @@ public class ClientHelper {
     private static final ResourceLocation INWORLD_HEADER_SEPARATOR = new ResourceLocation(Tags.MOD_ID, "textures/gui/inworld_header_separator.png");
     private static final ResourceLocation INWORLD_FOOTER_SEPARATOR = new ResourceLocation(Tags.MOD_ID, "textures/gui/inworld_footer_separator.png");
 
-    public static void renderWorldBackground(@Nonnull Minecraft mc, int width, int height) {
+    public static boolean renderWorldBackground(@Nullable GuiScreen screen, @Nonnull Minecraft mc, int width, int height) {
+        if (!shouldModifyBG(screen)) return false;
         if (mc.world == null) {
             renderPanorama(mc);
         }
         renderMenuBackground(mc, width, height);
+        return true;
     }
 
     private static void renderMenuBackground(@Nonnull Minecraft mc, int width, int height) {
@@ -113,5 +115,15 @@ public class ClientHelper {
 
         if (blend) GlStateManager.enableBlend();
         else GlStateManager.disableBlend();
+    }
+
+    private static boolean shouldModifyBG(@Nullable GuiScreen screen) {
+        if (!ClearMyBackground.GAME_LOADING_DONE || screen == null) return false;
+        if (ClearMyBackground.FLUX_LOADING_LOADED &&
+                (screen instanceof GuiScreenWorking || screen instanceof GuiDownloadTerrain)
+        ) return false;
+        //noinspection RedundantIfStatement
+        if (screen instanceof GuiNotification) return false;
+        return true;
     }
 }

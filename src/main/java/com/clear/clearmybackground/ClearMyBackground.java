@@ -16,10 +16,12 @@ import org.apache.logging.log4j.Logger;
 )
 public class ClearMyBackground {
     public static final Logger LOGGER = LogManager.getLogger();
-    public static boolean FluxLoadingLoaded = false;
+    public static boolean GAME_LOADING_DONE = false;
+    public static boolean FLUX_LOADING_LOADED = false;
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        FluxLoadingLoaded = Loader.isModLoaded("fluxloading");
+        GAME_LOADING_DONE = true;
+        FLUX_LOADING_LOADED = Loader.isModLoaded("fluxloading");
     }
 }

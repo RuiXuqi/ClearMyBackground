@@ -11,13 +11,13 @@ import us.getfluxed.controlsearch.client.gui.GuiNewKeyBindingList;
 @Mixin(value = GuiNewKeyBindingList.class, remap = false)
 public class GuiNewKeyBindingListMixin {
     @Inject(method = "drawSelectionBox", at = @At("HEAD"))
-    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci){
+    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci) {
         GuiNewKeyBindingList self = (GuiNewKeyBindingList) (Object) this;
         ClientHelper.scissor(self.left, self.top, self.right - self.left, self.bottom - self.top);
     }
 
     @Inject(method = "drawSelectionBox", at = @At("RETURN"))
-    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci){
+    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks, CallbackInfo ci) {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 }
