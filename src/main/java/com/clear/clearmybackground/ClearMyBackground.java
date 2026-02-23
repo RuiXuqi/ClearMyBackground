@@ -1,8 +1,7 @@
 package com.clear.clearmybackground;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +19,13 @@ import org.apache.logging.log4j.Logger;
 )
 public class ClearMyBackground {
     public static final Logger LOGGER = LogManager.getLogger();
+    public static boolean GAME_LOADING_DONE = false;
 
     public static final String MOD_ID = "clearmybackground";
     public static final String MOD_NAME = "Clear My Background";
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        GAME_LOADING_DONE = true;
+    }
 }

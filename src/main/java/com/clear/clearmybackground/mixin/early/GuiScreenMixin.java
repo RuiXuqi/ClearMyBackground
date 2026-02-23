@@ -1,7 +1,6 @@
 package com.clear.clearmybackground.mixin.early;
 
 import com.clear.clearmybackground.ClientHelper;
-import cpw.mods.fml.client.GuiOldSaveLoadConfirm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,16 +26,16 @@ public class GuiScreenMixin {
     @Inject(method = "drawWorldBackground", at = @At("HEAD"), cancellable = true)
     public void drawWorldBackground(int tint, @Nonnull CallbackInfo ci) {
         GuiScreen self = (GuiScreen) (Object) this;
-        if (self instanceof GuiOldSaveLoadConfirm) return;
-        ClientHelper.renderWorldBackground(this.mc,this.width, this.height);
-        ci.cancel();
+        if (ClientHelper.renderWorldBackground(self, this.mc, this.width, this.height)) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "drawBackground", at = @At("HEAD"), cancellable = true)
     public void drawBackground(int tint, @Nonnull CallbackInfo ci) {
         GuiScreen self = (GuiScreen) (Object) this;
-        if (self instanceof GuiOldSaveLoadConfirm) return;
-        ClientHelper.renderWorldBackground(this.mc,this.width, this.height);
-        ci.cancel();
+        if (ClientHelper.renderWorldBackground(self, this.mc, this.width, this.height)) {
+            ci.cancel();
+        }
     }
 }

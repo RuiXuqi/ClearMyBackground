@@ -103,12 +103,12 @@ public class GuiSlotMixin {
     }
 
     @Inject(method = "drawSelectionBox", at = @At("HEAD"))
-    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci){
+    private void enableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci) {
         ClientHelper.scissor(this.left, this.top, this.right - this.left, this.bottom - this.top);
     }
 
     @Inject(method = "drawSelectionBox", at = @At("RETURN"))
-    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci){
+    private void disableScissor(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, CallbackInfo ci) {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 }
