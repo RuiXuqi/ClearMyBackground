@@ -12,7 +12,12 @@ import org.apache.logging.log4j.Logger;
         version = Tags.VERSION,
         clientSideOnly = true,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:mixinbooter@[8.0,)"
+        dependencies = "required-after:mixinbooter@[8.0,)",
+        customProperties = {
+                @Mod.CustomProperty(k = "license", v = "MIT"),
+                @Mod.CustomProperty(k = "issueTrackerUrl", v = "https://github.com/RuiXuqi/ClearMyBackground/issues"),
+                @Mod.CustomProperty(k = "iconItem", v = "minecraft:dirt")
+        }
 )
 public class ClearMyBackground {
     public static final Logger LOGGER = LogManager.getLogger();
