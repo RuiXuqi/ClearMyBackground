@@ -35,4 +35,5 @@
  */
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.40-GTNH:dev")
+    implementation(rfg.deobf(project.files("libs/fluxloading-0.0.8.jar")))
 }

@@ -3,10 +3,7 @@ package com.clear.clearmybackground;
 import com.clear.clearmybackground.mixin.early.GuiMainMenuAccessor;
 import cpw.mods.fml.client.GuiNotification;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -120,6 +117,9 @@ public class ClientHelper {
 
     private static boolean shouldModifyBG(@Nullable GuiScreen screen) {
         if (!ClearMyBackground.GAME_LOADING_DONE || screen == null) return false;
+        if (ClearMyBackground.FLUX_LOADING_LOADED &&
+                (screen instanceof GuiScreenWorking || screen instanceof GuiDownloadTerrain)
+        ) return false;
         //noinspection RedundantIfStatement
         if (screen instanceof GuiNotification) return false;
         return true;
