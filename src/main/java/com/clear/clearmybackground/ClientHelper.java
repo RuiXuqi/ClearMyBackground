@@ -13,6 +13,9 @@ import javax.annotation.Nullable;
 
 public class ClientHelper {
 
+    private static int lastScaledWidth = 0;
+    private static int lastScaledHeight = 0;
+
     /**
      * Creates a scissor test using minecraft screen coordinates instead of pixel coordinates.
      */
@@ -68,10 +71,15 @@ public class ClientHelper {
     public static void renderPanorama(@Nonnull Minecraft mc) {
         final GuiMainMenu menu = MENU_INSTANCE;
 
-        int oldWidth = menu.width;
-        int oldHeight = menu.height;
         final ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        menu.setWorldAndResolution(mc, sr.getScaledWidth(), sr.getScaledHeight());
+        int scaledWidth = sr.getScaledWidth();
+        int scaledHeight = sr.getScaledHeight();
+        
+        if (scaledWidth != lastScaledWidth || scaledHeight != lastScaledHeight) {
+            menu.setWorldAndResolution(mc, scaledWidth, scaledHeight);
+            lastScaledWidth = scaledWidth;
+            lastScaledHeight = scaledHeight;
+        }
 
         boolean alpha = GL11.glIsEnabled(GL11.GL_ALPHA_TEST);
         boolean depth = GL11.glIsEnabled(GL11.GL_DEPTH_TEST);
@@ -84,9 +92,6 @@ public class ClientHelper {
         else GL11.glDisable(GL11.GL_ALPHA_TEST);
         if (depth) GL11.glEnable(GL11.GL_DEPTH_TEST);
         else GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-        menu.width = oldWidth;
-        menu.height = oldHeight;
     }
 
     public static void renderListSeparators(@Nonnull Minecraft mc, int left, int top, int right, int bottom) {
