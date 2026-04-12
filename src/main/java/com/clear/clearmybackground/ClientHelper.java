@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 
 public class ClientHelper {
 
+    // Cache last resolution to avoid rebuilding every frame
     private static int lastScaledWidth = 0;
     private static int lastScaledHeight = 0;
 
@@ -74,7 +75,8 @@ public class ClientHelper {
         final ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int scaledWidth = sr.getScaledWidth();
         int scaledHeight = sr.getScaledHeight();
-        
+
+        // Only call setWorldAndResolution when resolution changes, avoid triggering initGui every frame
         if (scaledWidth != lastScaledWidth || scaledHeight != lastScaledHeight) {
             menu.setWorldAndResolution(mc, scaledWidth, scaledHeight);
             lastScaledWidth = scaledWidth;
