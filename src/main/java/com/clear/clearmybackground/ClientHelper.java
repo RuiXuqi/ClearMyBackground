@@ -12,11 +12,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ClientHelper {
-
-    // Cache last resolution to avoid rebuilding every frame
-    private static int lastScaledWidth = 0;
-    private static int lastScaledHeight = 0;
-
     /**
      * Creates a scissor test using minecraft screen coordinates instead of pixel coordinates.
      */
@@ -38,6 +33,9 @@ public class ClientHelper {
      * The {@link GuiMainMenu} instance used for panorama rendering.
      */
     public static @Nonnull GuiMainMenu MENU_INSTANCE = new GuiMainMenu();
+    // Cache last resolution to avoid rebuilding every frame
+    private static int lastScaledWidth = 0;
+    private static int lastScaledHeight = 0;
 
     private static final ResourceLocation MENU_BACKGROUND = new ResourceLocation(ClearMyBackground.MOD_ID, "textures/gui/menu_background.png");
     private static final ResourceLocation MENU_LIST_BACKGROUND = new ResourceLocation(ClearMyBackground.MOD_ID, "textures/gui/menu_list_background.png");
@@ -70,15 +68,13 @@ public class ClientHelper {
     }
 
     public static void renderPanorama(@Nonnull Minecraft mc) {
-        final GuiMainMenu menu = MENU_INSTANCE;
-
         final ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int scaledWidth = sr.getScaledWidth();
         int scaledHeight = sr.getScaledHeight();
 
         // Only call setWorldAndResolution when resolution changes, avoid triggering initGui every frame
         if (scaledWidth != lastScaledWidth || scaledHeight != lastScaledHeight) {
-            menu.setWorldAndResolution(mc, scaledWidth, scaledHeight);
+            MENU_INSTANCE.setWorldAndResolution(mc, scaledWidth, scaledHeight);
             lastScaledWidth = scaledWidth;
             lastScaledHeight = scaledHeight;
         }
@@ -88,7 +84,7 @@ public class ClientHelper {
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-        ((GuiMainMenuAccessor) menu).invokeRenderSkybox(0, 0, 0);
+        ((GuiMainMenuAccessor) MENU_INSTANCE).invokeRenderSkybox(0, 0, 0);
 
         if (alpha) GL11.glEnable(GL11.GL_ALPHA_TEST);
         else GL11.glDisable(GL11.GL_ALPHA_TEST);
