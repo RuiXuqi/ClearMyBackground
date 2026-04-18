@@ -24,7 +24,6 @@ public class MinecraftMixin {
                     target = "Lnet/minecraft/client/gui/GuiScreen;updateScreen()V")
     )
     private void updateTicker(CallbackInfo ci) {
-        // FIXME: tick more properly
         if (this.currentScreen instanceof GuiMainMenu) return;
         ((IGuiMainMenuMixin) ClientHelper.MENU_INSTANCE).clearMyBackground$tickPanoramaTimer();
     }
