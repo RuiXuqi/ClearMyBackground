@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ClientHelper {
-
     /**
      * Creates a scissor test using minecraft screen coordinates instead of pixel coordinates.
      */
@@ -35,6 +34,9 @@ public class ClientHelper {
      * The {@link GuiMainMenu} instance used for panorama rendering.
      */
     public static @Nonnull GuiMainMenu MENU_INSTANCE = new GuiMainMenu();
+    // Cache last resolution to avoid rebuilding every frame
+    private static int lastScaledWidth = 0;
+    private static int lastScaledHeight = 0;
 
     private static final ResourceLocation MENU_BACKGROUND = new ResourceLocation(Tags.MOD_ID, "textures/gui/menu_background.png");
     private static final ResourceLocation MENU_LIST_BACKGROUND = new ResourceLocation(Tags.MOD_ID, "textures/gui/menu_list_background.png");
@@ -67,28 +69,29 @@ public class ClientHelper {
     }
 
     public static void renderPanorama(@Nonnull Minecraft mc) {
-        final GuiMainMenu menu = MENU_INSTANCE;
-
-        int oldWidth = menu.width;
-        int oldHeight = menu.height;
         final ScaledResolution sr = new ScaledResolution(mc);
-        menu.setWorldAndResolution(mc, sr.getScaledWidth(), sr.getScaledHeight());
+        int scaledWidth = sr.getScaledWidth();
+        int scaledHeight = sr.getScaledHeight();
+
+        // Only call setWorldAndResolution when resolution changes, avoid triggering initGui every frame
+        if (scaledWidth != lastScaledWidth || scaledHeight != lastScaledHeight) {
+            MENU_INSTANCE.setWorldAndResolution(mc, scaledWidth, scaledHeight);
+            lastScaledWidth = scaledWidth;
+            lastScaledHeight = scaledHeight;
+        }
 
         boolean alpha = GL11.glIsEnabled(GL11.GL_ALPHA_TEST);
         boolean depth = GL11.glIsEnabled(GL11.GL_DEPTH_TEST);
         GlStateManager.disableAlpha();
         GlStateManager.disableDepth();
 
-        ((IGuiMainMenuMixin) menu).clearMyBackground$tickPanoramaTimer(mc.getTickLength());
-        ((GuiMainMenuAccessor) menu).invokeRenderSkybox(0, 0, mc.getTickLength());
+        ((IGuiMainMenuMixin) MENU_INSTANCE).clearMyBackground$tickPanoramaTimer(mc.getTickLength());
+        ((GuiMainMenuAccessor) MENU_INSTANCE).invokeRenderSkybox(0, 0, mc.getTickLength());
 
         if (alpha) GlStateManager.enableAlpha();
         else GlStateManager.disableAlpha();
         if (depth) GlStateManager.enableDepth();
         else GlStateManager.disableDepth();
-
-        menu.width = oldWidth;
-        menu.height = oldHeight;
     }
 
     public static void renderListSeparators(@Nonnull Minecraft mc, int left, int top, int right, int bottom) {
