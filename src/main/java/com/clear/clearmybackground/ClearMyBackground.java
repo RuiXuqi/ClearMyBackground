@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
         name = ClearMyBackground.MOD_NAME,
         version = Tags.VERSION,
         acceptableRemoteVersions = "*",
-        dependencies = "required-after:unimixins",
         customProperties = {
                 @Mod.CustomProperty(k = "license", v = "MIT"),
                 @Mod.CustomProperty(k = "issueTrackerUrl", v = "https://github.com/RuiXuqi/ClearMyBackground/issues"),
